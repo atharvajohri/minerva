@@ -13,8 +13,23 @@ hibernate {
 environments {
     development {
         dataSource {
-            dbCreate = "create-drop" // one of 'create', 'create-drop', 'update', 'validate', ''
-            url = "jdbc:h2:mem:devDb;MVCC=TRUE;LOCK_TIMEOUT=10000"
+//            dbCreate = "create-drop" // one of 'create', 'create-drop', 'update', 'validate', ''
+//            url = "jdbc:h2:mem:devDb;MVCC=TRUE;LOCK_TIMEOUT=10000"
+			pooled = true
+			dbCreate = "update"
+			url = "jdbc:mysql://localhost/minerva"
+			driverClassName = "com.mysql.jdbc.Driver"
+			username = "root"
+			password = "root"
+			properties {
+				maxActive = 50
+				maxIdle = 25
+				minIdle = 10
+				initialSize = 10
+				minEvictableIdleTimeMillis = 1200000
+				timeBetweenEvictionRunsMillis = 1200000
+				maxWait = 10000
+			}
         }
     }
     test {
