@@ -1,0 +1,5 @@
+<decorators>
+    <excludes>
+        <pattern>/relay/*</pattern>
+    </excludes>
+</decorators>
