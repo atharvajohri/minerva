@@ -103,6 +103,10 @@ class SoccerController {
 	}
 	
 	
+	def watcher(){
+		
+	}
+	
 	def updateRetriever(){
 		
 	}

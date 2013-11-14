@@ -1,0 +1,40 @@
+<b>Popularizer:</b> Promote page by posting comment on popular posts of other similar pages
+<div id="popularize">
+	<div class='popularize-target-pages floatL bordered rounded'>
+		<table id="target-pages-binder">
+			<thead>
+				<tr>
+					<th>PageId</th><th>Page Name</th><th>Likes</th>
+				</tr>
+			</thead>
+			<tbody data-bind="foreach: targetPages">
+				<tr>
+	           		<td data-bind="text: pageId"></td>
+	            	<td data-bind="text: pageName"></td>
+	            	<td data-bind="text: pageData.likes"></td>
+	        	</tr>
+			</tbody>
+		</table>
+		<div id="add-target-page-binder">
+			Page ID : <input type="text" data-bind="value: pageId">
+			<input type="button" value="Add" id="add-tp-btn">
+		</div>
+	</div>
+	<div class='current-target-pages floatL bordered rounded'>
+		<table id="current-target-pages-table">
+			<thead>
+				<tr>
+					<th>PageId</th><th>Page Name</th>
+				</tr>
+			</thead>
+			<tbody>
+				
+			</tbody>
+		</table>
+	</div>
+</div>
+<div id="bottom-menu">
+	<input type="button" value="Close" id="close-popularizer">
+	<input type="button" value="Register Pages" id="register-popularization">
+	<input type="button" value="Popularize" id="commence-popularization">
+</div>
