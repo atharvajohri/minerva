@@ -111,6 +111,7 @@
 			</div>
 			<div class="content-box">
 				<b>Extracted content:</b>
+				Reduce Popularity % <input type="text" id="pop-red" />
 				<div class="extract-menu-button" id="schedule-btn">
 					Schedule
 				</div>

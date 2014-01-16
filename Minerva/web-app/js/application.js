@@ -1,11 +1,11 @@
 //GLOBALS
-var stTimeDifference = 35*60*1000; //picked posts will be scheduled at a diff of every 20 mins
+var stTimeDifference = 45*60*1000; //picked posts will be scheduled at a diff of every 20 mins
 var pageId = "1444169292475774";
 var testPageId = "247906198588126";
 var allowSchedule = true;
 var fillerText = "The Top Corner: Football Videos, Highlights and News! :)";
 var earliestPostTimeDifference = 36 * 60 * 60 * 1000; //36 hours
-var scheduleStartTime = new Date().getTime() + 300000;
+var scheduleStartTime = new Date().getTime() + 2000000;
 
 var WatcherModel = function(){
 	var self = this;
@@ -70,12 +70,14 @@ function getSimilarityRank(ele1, ele2){
 function pickPosts(){
 	console.log("********************\npopulating schedule queue from:");
 	console.log(wm.parsedObjects);
-	
+	wm.pickedPosts = [];
 	var pickedQueue = [];
 	var popularPostSet = [];
 	
 	for (var i in wm.parsedObjects){
-		if (Number(wm.parsedObjects[i].popularity) > Number(wm.urls()[wm.parsedObjects[i].pageIndex].averagePopularity())){
+		var pop_reduction = Number($("#pop-red").val()) || 0; 
+		var pop_final = wm.urls()[wm.parsedObjects[i].pageIndex].averagePopularity() * (1 - pop_reduction/100);
+		if (Number(wm.parsedObjects[i].popularity) > Number(pop_final)){
 			popularPostSet.push(wm.parsedObjects[i]);
 		}
 	}
@@ -384,7 +386,7 @@ $(document).ready(function(){
 		wm.addURL();
 		
 		//live football news
-		newURL.link("live.football.news"); 
+		/*newURL.link("live.football.news"); 
 		newURL.name("Live Football News");
 		newURL.source("fb");
 		wm.addURL();
@@ -405,7 +407,7 @@ $(document).ready(function(){
 		newURL.link("179678092221501"); 
 		newURL.name("Football Wars");
 		newURL.source("fb");
-		wm.addURL();
+		wm.addURL();*/
 		
 		setupBindings();
 	});
@@ -522,8 +524,9 @@ function showData(allData, dataindex, urlindex, totalPopularity){
 					curData.message = curData.message.replace("<Fire>", "");
 					curData.message = curData.message.replace("messi'nheart10", "");
 					curData.message = curData.message.replace("FreddieMercury", "");
+					curData.message = curData.message.replace("VBV", "");
 				}
-				curData.message = curData.message ? curData.message + "\n" + fillerText : fillerText;
+				curData.message = curData.message ? curData.message + "\n\n" + fillerText : fillerText;
 				
 				var extractHTML = "<tr><td>"+curData.id+"</td><td>"+curData.type+"</td>";
 				if (curData.picture)
