@@ -57,7 +57,7 @@ var Screen = function(){
 		
 		nameContainerCss["font-size"] = g_utils.ratio(self.height, self.massiveFontSizeRatio);
 		
-		faceContainerCss["width"] = g_utils.ratio(mainContainerCss["width"], 2);
+		faceContainerCss["width"] = g_utils.ratio(mainContainerCss["width"], 3);
 		faceContainerCss["height"] = faceContainerCss["width"];
 		faceContainerCss["border-radius"] = faceContainerCss["width"];
 		faceContainerCss["margin-top"] = g_utils.ratio(self.height, 10);
@@ -81,9 +81,10 @@ var Screen = function(){
 	
 	self.createOptions = function(clear){
 		g_logger.log("Setting up " + n + " options.");
-		if (clear)
+		if (clear){
 			$(".generated-point").remove();
-
+			$("#top-menu-container").empty();
+		}
 		var n = self.menuOptions.length;
 		var if_x = $("#interactive-info-container").width()/2;
 		var if_y = $("#interactive-info-container").height()/2;
@@ -95,7 +96,11 @@ var Screen = function(){
 			var py = if_y + if_radius * Math.cos(2 * Math.PI * i / n);
 			var vertice = new Point(px, py);
 			var verticeElement = vertice.attachDiv('interactive-option', self.menuOptions[i].text);
+			var topMenuOptionHTML = "<div class='top-menu-option'>"+self.menuOptions[i].text+"</div>";
+			$("#top-menu-container").append(topMenuOptionHTML);
 		}
+		
+		$(".top-menu-option").css("width", g_utils.ratio($("#main-container").width(), n+2));
 	}
 	
 	self.menuOptions = [];
@@ -111,7 +116,7 @@ var Point = function(x, y, id){
 		if (self.x && self.y && self.id){
 			g_logger.log("Attaching div to point " + self.id);
 			var fs = g_utils.ratio(g_screen.height, 42.96);
-			var mw = g_utils.ratio(g_screen.width, 14.8);
+			var mw = "auto";//g_utils.ratio(g_screen.width, 14.8);
 			$("#interactive-info-container").prepend("<div class='"+(elementClass || 'visible-point')+" generated-point' style='font-size:"+fs+";max-width:"+mw+"' id='vp-"+self.id+"'></div>");
 			returnPoint = $("#vp-"+self.id);
 			returnPoint.html(html || "");
@@ -137,23 +142,42 @@ var g_utils = new Utils();
 var g_animationTimer = 300;
 
 $(window).load(function(){
+	initializePage();
+	setupUIEvents();
+});
+
+function initializePage(){
 	//uncomment below to read logs!
 	g_logger.activateLog(); 
 	g_logger.log("Welcome to AtharvaJohri.com!")
-
 	g_screen.menuOptions = [
 	   {"text": "Web Developer"},
-	   {"text": "Longer"},
-	   {"text": "Quite Long"},
+	   {"text": "Philosopher"},
+	   {"text": "Musician"},
 	   {"text": "Human"},
-	   {"text": "Option 3"},
-	   {"text": "Option 2"}
+	   {"text": "Artist"},
+	   {"text": "Engineer"}
 	];
 	g_screen.setupDimensions();
+}
+
+function setupUIEvents(){
 	$(window).resize(function(){
 		g_screen.setupDimensions(true);
 	});
-});
+	$("#interactive-info-container").on("click", ".interactive-option", function(){
+		$("#interactive-info-container").fadeOut(g_animationTimer, function(){
+			showTopMenu();
+		});
+	});
+}
+
+function showTopMenu(hide, callback){
+	$("#top-menu-container").animate({"height":"36px"}, g_animationTimer, function(){
+		if (callback)
+			callback();
+	});
+}
 
 
 //not all those who wander are lost!
