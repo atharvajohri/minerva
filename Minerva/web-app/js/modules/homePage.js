@@ -95,8 +95,8 @@ var Screen = function(){
 			var px = if_x + if_radius * Math.sin(2 * Math.PI * i / n);
 			var py = if_y + if_radius * Math.cos(2 * Math.PI * i / n);
 			var vertice = new Point(px, py);
-			var verticeElement = vertice.attachDiv('interactive-option', self.menuOptions[i].text);
-			var topMenuOptionHTML = "<div class='top-menu-option'>"+self.menuOptions[i].text+"</div>";
+			var verticeElement = vertice.attachDiv('interactive-option', self.menuOptions[i]);
+			var topMenuOptionHTML = "<div class='top-menu-option' rel='"+self.menuOptions[i].hash+"'>"+self.menuOptions[i].text+"</div>";
 			$("#top-menu-container").append(topMenuOptionHTML);
 		}
 		
@@ -104,6 +104,15 @@ var Screen = function(){
 	}
 	
 	self.menuOptions = [];
+	self.populateMenuOptions = function(){
+		$("#main-content-container .content-container").each(function(){
+			var container = $(this);
+			var option = new Object();
+			option["hash"] = container.attr("id");
+			option["text"] = container.attr("title");
+			self.menuOptions.push(option);
+		});
+	}
 }
 
 var Point = function(x, y, id){
@@ -111,15 +120,16 @@ var Point = function(x, y, id){
 	self.x = x;
 	self.y = y;
 	self.id = (id || Math.floor(Math.random()*99999));
-	self.attachDiv = function(elementClass, html){
+	self.attachDiv = function(elementClass, menuObject){
 		var returnPoint = null;
 		if (self.x && self.y && self.id){
 			g_logger.log("Attaching div to point " + self.id);
-			var fs = g_utils.ratio(g_screen.height, 42.96);
+			var fs = g_utils.ratio(g_screen.height, 45.96);
 			var mw = "auto";//g_utils.ratio(g_screen.width, 14.8);
 			$("#interactive-info-container").prepend("<div class='"+(elementClass || 'visible-point')+" generated-point' style='font-size:"+fs+";max-width:"+mw+"' id='vp-"+self.id+"'></div>");
 			returnPoint = $("#vp-"+self.id);
-			returnPoint.html(html || "");
+			returnPoint.html(menuObject.text || "");
+			returnPoint.attr("rel", (menuObject.hash || ""));
 			var attachCss = new Object();
 			attachCss["top"] = (self.y - returnPoint.height()/2) + "px";
 			attachCss["left"] = (self.x - returnPoint.width()/2) + "px";
@@ -150,14 +160,7 @@ function initializePage(){
 	//uncomment below to read logs!
 	g_logger.activateLog(); 
 	g_logger.log("Welcome to AtharvaJohri.com!")
-	g_screen.menuOptions = [
-	   {"text": "Web Developer"},
-	   {"text": "Philosopher"},
-	   {"text": "Musician"},
-	   {"text": "Human"},
-	   {"text": "Artist"},
-	   {"text": "Engineer"}
-	];
+	g_screen.populateMenuOptions();
 	g_screen.setupDimensions();
 }
 
@@ -166,14 +169,29 @@ function setupUIEvents(){
 		g_screen.setupDimensions(true);
 	});
 	$("#interactive-info-container").on("click", ".interactive-option", function(){
+		location.hash = $(this).attr("rel");
 		$("#interactive-info-container").fadeOut(g_animationTimer, function(){
 			showTopMenu();
 		});
 	});
+	$("#top-menu-container").on("click", ".top-menu-option", function(){
+		location.hash = $(this).attr("rel");
+	});
+	$(window).bind('hashchange', function() {
+		openContent(location.hash.replace("#",""));
+	});
+}
+
+function openContent(topic){
+	$(".content-container").fadeOut(g_animationTimer);
+	setTimeout(function(){
+		$("#main-content-container, #"+topic).fadeIn(g_animationTimer);	
+	}, g_animationTimer);
+	
 }
 
 function showTopMenu(hide, callback){
-	$("#top-menu-container").animate({"height":"36px"}, g_animationTimer, function(){
+	$("#top-menu-container").fadeIn(g_animationTimer, function(){
 		if (callback)
 			callback();
 	});

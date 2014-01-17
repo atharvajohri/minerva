@@ -31,12 +31,15 @@ body {font-family: 'Open Sans', sans-serif;;font-size:12px;padding:0;margin:0}
 #interactive-info-container {margin:20px 10px;position:relative;margin-top:130px}
 #interactive-face-container {border:2px solid #ccc;background:#ccc;margin:auto;overflow:hidden}
 
-.interactive-option {position:absolute;font-weight:300;color:#555;cursor:pointer;}
+.interactive-option {position:absolute;font-weight:300;color:#555;cursor:pointer;background:rgba(255, 255, 255, 0.5);border-radius:3px;}
 .interactive-option:hover {font-weight:400}
 
-#top-menu-container {text-align: center;height:1px;min-height:1px !important;overflow:hidden;}
-.top-menu-option {display:inline-block;padding:10px;background:#f5f5f5;}
+#top-menu-container {text-align: center;display:none;overflow:hidden; }
+.top-menu-option {display:inline-block;padding:10px;background:#e4e4e4;}
+.top-menu-option:hover {background:#d5d5d5;cursor:pointer;}
 
+#main-content-container {display:none}
+.content-container {display:none}
 .bold {font-weight:400}
 
 /*geometry*/

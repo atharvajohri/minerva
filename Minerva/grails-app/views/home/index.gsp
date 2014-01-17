@@ -20,6 +20,17 @@
 				
 				</div>
 			</div>
+			<div id="main-content-container">
+				<div class="content-container" id="human" title="Human">
+					this is some random content for human
+				</div>
+				<div class="content-container" id="engineer" title="Engineer">
+					this is some random content for engg
+				</div>
+				<div class="content-container" id="asdsad" title="Asdasd">
+					this is some random content for asd
+				</div>
+			</div>
 		</div>
 		<script type="text/javascript" src="/js/frameworks/jquery.min.js"></script>
 		<script type="text/javascript" src="/js/modules/homePage.js"></script>
