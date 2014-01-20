@@ -52,6 +52,7 @@ var Screen = function(){
 		var mainContainerCss = new Object();
 		var nameContainerCss = new Object();
 		var faceContainerCss = new Object();
+		var interactiveInfoContainerCss = new Object();
 		
 		mainContainerCss["width"] = g_utils.ratio(self.width, 1.5);
 		
@@ -60,20 +61,26 @@ var Screen = function(){
 		faceContainerCss["width"] = g_utils.ratio(mainContainerCss["width"], 3);
 		faceContainerCss["height"] = faceContainerCss["width"];
 		faceContainerCss["border-radius"] = faceContainerCss["width"];
+		faceContainerCss["background-size"] = g_utils.ratio(self.height, (921/360)); //360 - perfect size for ascreen of height 921 px 
 		faceContainerCss["margin-top"] = g_utils.ratio(self.height, 10);
 		
-		if (animate){
-			$("#main-container").stop().animate(mainContainerCss, g_animationTimer);
-			$("#name-container").stop().animate(nameContainerCss, g_animationTimer);
-			$("#interactive-face-container").stop().animate(faceContainerCss, g_animationTimer);
-		}else{
+		interactiveInfoContainerCss["margin-top"] = g_utils.ratio(self.height, (788/130));
+		
+//		if (animate){
+//			$("#main-container").stop().animate(mainContainerCss, g_animationTimer);
+//			$("#name-container").stop().animate(nameContainerCss, g_animationTimer);
+//			$("#interactive-face-container").stop().animate(faceContainerCss, g_animationTimer);
+//			$("#interactive-info-container").stop().animate(interactiveInfoContainerCss, g_animationTimer);
+//		}else{
 			$("#main-container").css(mainContainerCss);
 			$("#name-container").css(nameContainerCss);
-			$("#interactive-face-container").css(faceContainerCss);			
-		}
+			$("#interactive-face-container").css(faceContainerCss);
+			$("#interactive-info-container").stop().animate(interactiveInfoContainerCss, g_animationTimer);
+//		}
 
 		setTimeout(function(){
 			self.createOptions(true);
+//			setupWatcher();
 		}, g_animationTimer);
 		
 		$("#main-container").fadeIn(g_animationTimer);
@@ -110,21 +117,73 @@ var Screen = function(){
 			var option = new Object();
 			option["hash"] = container.attr("id");
 			option["text"] = container.attr("title");
+			option["font-family"] = container.attr("font-family");
+			option["font-size-ratio"] = container.attr("font-size-ratio");
 			self.menuOptions.push(option);
 		});
 	}
 }
 
-var Point = function(x, y, id){
+function setupWatcher(){
+	g_logger.log("Setting up watcher..");
+	
+	var actualW = $("#faceimg").width();
+	var actualH = $("#faceimg").height();
+	var actualEyeW = $("#eyeimg").width();
+	var actualEyeW = $("#eyeimg").width();
+	g_logger.log("Watcher FACE dimensions: " + actualW + ", " + actualH);
+	
+	var reqW = $("#interactive-face-container").width();
+	var reqH = $("#interactive-face-container").height();
+	g_logger.log("Watcher CONTAINER dimensions: " + reqW + ", " + reqH);
+	//206, 183
+	var eLeft = new Point(reqW*0.356, reqH*0.537, null, $("#eye-left"));
+	var eRight = new Point(reqW*0.614, reqH*0.537, null, $("#eye-right"));
+	
+	var center = new Point((eLeft.x+eRight.x)/2, (eLeft.y+eRight.y)/2);
+	
+	var eyeCss = new Object();
+	eyeCss.width = ($(".eye").width()/actualW)*reqW;
+	eyeCss.height = ($(".eye").height()/actualH)*reqH; 
+	$(".eye").css(eyeCss);
+	
+	var faceCss = new Object();
+	faceCss.width = reqW;
+	faceCss.height = reqH;
+	$("#face").css(faceCss);
+	
+	$(document).mousemove(function(e){
+		var mx = e.pageX || e.screenX;
+		var my = e.pageY || e.screenY;
+		
+		var kx = (0.5 * eLeft.element.width())/$(window).width();
+		var ky = (0.5 * eLeft.element.height())/$(window).height();
+		
+		var cx = kx * (center.x - mx);
+		var cy = ky * (center.y - my);
+		
+		eLeft.element.css({
+			"left": ((eLeft.x - cx) + "px"), 
+			"top": ((eLeft.y - cy) + "px")
+		});
+		eRight.element.css({
+			"left": ((eRight.x - cx) + "px"), 
+			"top": ((eRight.y - cy) + "px")
+		});
+	});
+}
+
+var Point = function(x, y, id, element){
 	var self = this;
 	self.x = x;
 	self.y = y;
 	self.id = (id || Math.floor(Math.random()*99999));
+	self.element = element;
 	self.attachDiv = function(elementClass, menuObject){
 		var returnPoint = null;
 		if (self.x && self.y && self.id){
 			g_logger.log("Attaching div to point " + self.id);
-			var fs = g_utils.ratio(g_screen.height, 45.96);
+			var fs = g_utils.ratio(g_screen.height, (menuObject["font-size-ratio"] || 42.96));
 			var mw = "auto";//g_utils.ratio(g_screen.width, 14.8);
 			$("#interactive-info-container").prepend("<div class='"+(elementClass || 'visible-point')+" generated-point' style='font-size:"+fs+";max-width:"+mw+"' id='vp-"+self.id+"'></div>");
 			returnPoint = $("#vp-"+self.id);
@@ -133,8 +192,8 @@ var Point = function(x, y, id){
 			var attachCss = new Object();
 			attachCss["top"] = (self.y - returnPoint.height()/2) + "px";
 			attachCss["left"] = (self.x - returnPoint.width()/2) + "px";
-//			attachCss["font-size"] = fs;
-//			attachCss["max-width"] = g_utils.ratio(g_screen.width, 16.8);
+			attachCss["font-family"] = menuObject["font-family"];
+//			attachCss["font-size"] = menuObject["font-size"];
 			returnPoint.css(attachCss);
 		}else{
 			g_logger.log("Tried to surround invalid point with a div.", "ERROR");
@@ -170,9 +229,6 @@ function setupUIEvents(){
 	});
 	$("#interactive-info-container").on("click", ".interactive-option", function(){
 		location.hash = $(this).attr("rel");
-		$("#interactive-info-container").fadeOut(g_animationTimer, function(){
-			showTopMenu();
-		});
 	});
 	$("#top-menu-container").on("click", ".top-menu-option", function(){
 		location.hash = $(this).attr("rel");
@@ -180,21 +236,42 @@ function setupUIEvents(){
 	$(window).bind('hashchange', function() {
 		openContent(location.hash.replace("#",""));
 	});
+	$("#name-container").click(function(){
+		location.hash = "";
+	});
+	$(window).trigger("hashchange");
 }
 
 function openContent(topic){
-	$(".content-container").fadeOut(g_animationTimer);
-	setTimeout(function(){
-		$("#main-content-container, #"+topic).fadeIn(g_animationTimer);	
-	}, g_animationTimer);
-	
+	if (topic){
+		$("#interactive-info-container").fadeOut(g_animationTimer, function(){
+			showTopMenu(function(){
+				$(".content-container").fadeOut(g_animationTimer);
+				$(".top-menu-option").removeClass("top-menu-option-selected");
+				$(".top-menu-option[rel='"+topic+"']").addClass("top-menu-option-selected");
+				setTimeout(function(){
+					$("#main-content-container, #"+topic).fadeIn(g_animationTimer);	
+				}, g_animationTimer);			
+			});
+		});
+	}else{
+		showTopMenu(null, true);
+	}
 }
 
-function showTopMenu(hide, callback){
-	$("#top-menu-container").fadeIn(g_animationTimer, function(){
-		if (callback)
-			callback();
-	});
+function showTopMenu(callback, hide){
+	if (!hide){
+		$("#top-menu-container").fadeIn(g_animationTimer, function(){
+			if (callback)
+				callback();
+		});
+	}else{
+		$("#top-menu-container, #main-content-container").fadeOut(g_animationTimer, function(){
+			$("#interactive-info-container").fadeIn(g_animationTimer, function(){
+				g_screen.setupDimensions();
+			});
+		});
+	}
 }
 
 
