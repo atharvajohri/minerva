@@ -75,7 +75,7 @@ var Screen = function(){
 			$("#main-container").css(mainContainerCss);
 			$("#name-container").css(nameContainerCss);
 			$("#interactive-face-container").css(faceContainerCss);
-			$("#interactive-info-container").stop().animate(interactiveInfoContainerCss, g_animationTimer);
+			$("#interactive-info-container").css(interactiveInfoContainerCss);
 //		}
 
 		setTimeout(function(){
@@ -108,6 +108,14 @@ var Screen = function(){
 		}
 		
 		$(".top-menu-option").css("width", g_utils.ratio($("#main-container").width(), n+2));
+		
+		$("#footer-container").fadeOut(10);
+		setTimeout(function(){
+			var bodyContainerCss = new Object();
+			bodyContainerCss["min-height"] = self.height - $("#header-container").height() - $("#footer-container").height() - 40;
+			$("#body-container").css(bodyContainerCss);
+			$("#footer-container").fadeIn(10);
+		}, 600);
 	}
 	
 	self.menuOptions = [];
@@ -220,7 +228,6 @@ function initializePage(){
 	g_logger.activateLog(); 
 	g_logger.log("Welcome to AtharvaJohri.com!")
 	g_screen.populateMenuOptions();
-	g_screen.setupDimensions();
 }
 
 function setupUIEvents(){

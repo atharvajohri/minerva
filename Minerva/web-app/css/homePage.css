@@ -34,9 +34,12 @@ body {font-family: 'Open Sans', sans-serif;;font-size:12px;padding:0;margin:0;}
 #main-container {padding:10px;margin:auto;text-align: center; display:none; }
 #name-container {display:inline-block;font-weight:300;color:#999;padding-bottom:10px;cursor:pointer;}
 #header-container {}
+#footer-container {margin-top:15px;border-top:1px solid #aaa;opacity:0.6;color:#000;padding:15px;font-weight:400;font-size:15px;text-align: center;display:none;}
+#footer-container:hover {opacity:1.0}
+
 
 #interactive-info-container {margin:20px 10px;position:relative;}
-#interactive-face-container {border:2px solid #ccc;margin:auto;overflow:hidden;position:relative;background: url("/images/watcher/pics/filler.jpg");}
+#interactive-face-container {border:2px solid #ccc;margin:auto;overflow:hidden;position:relative;/* background: url("/images/watcher/pics/filler.jpg"); */}
 
 .interactive-option {position:absolute;font-weight:300;color:#555;cursor:pointer;background:rgba(255, 255, 255, 0.5);border-radius:3px;}
 .interactive-option:hover {font-weight:400}
@@ -57,7 +60,7 @@ body {font-family: 'Open Sans', sans-serif;;font-size:12px;padding:0;margin:0;}
 .social-icon-container img {opacity:0.6;width:100%}
 .social-icon-container img:hover {opacity:0.8;cursor:pointer;}
 
-#contact-container {text-align:center;font-size:25px;color:#555; width:450px;margin:auto;}
+#contact-container {text-align:center;font-size:25px;color:#555; width:670px;margin:auto;}
 #contact-container table {border-spacing:15px; }
 
 #face {position: relative;z-index:20;}
