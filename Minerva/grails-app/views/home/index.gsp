@@ -105,11 +105,11 @@
 						5. MySQL<br>
 						6. Operating Systems: Ubuntu 12.04 & Windows<br><br>
 						And here are some of my projects:<br>
-						1. Helium (2012): A hot air balloon flying game which was built as a promotional campaign for SocialHeart.
-						2. Pingpong Planet (2010): A ping pong game with the pong moving in random directions.
-						3. Galaport (2013): A carpool app to help commuters find other people going to the same place.
-						4. Splatter (2011): Rate places (institutes, restaurants, hospitals and anything you can find on a map!)
-						5. PwdBre@kr (2011): An alternative algorithm to brute force password breaking.
+						1. Helium (2012): A hot air balloon flying game which was built as a promotional campaign for SocialHeart.<br>
+						2. Pingpong Planet (2010): A ping pong game with the pong moving in random directions.<br>
+						3. Galaport (2013): A carpool app to help commuters find other people going to the same place.<br>
+						4. Splatter (2011): Rate places (institutes, restaurants, hospitals and anything you can find on a map!)<br>
+						5. PwdBre@kr (2011): An alternative algorithm to brute force password breaking.<br>
 					</div>
 					<div class="content-container" id="human" title="Human" font-family="'Grand Hotel', cursive" font-size-ratio="22">
 						<br><br>
@@ -202,7 +202,7 @@
 			</div>
 			<div id="footer-container">
 				All fonts used are free and open source fonts taken from Google Fonts<br>
-				Designed, developed and maintained by AJ
+				Designed, developed and maintained by Atharva Johri
 			</div>
 		</div>
 		<script type="text/javascript" src="/js/frameworks/jquery.min.js"></script>

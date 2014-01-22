@@ -250,6 +250,7 @@ function setupUIEvents(){
 }
 
 function openContent(topic){
+	g_screen.setupDimensions();
 	if (topic){
 		$("#interactive-info-container").fadeOut(g_animationTimer, function(){
 			showTopMenu(function(){

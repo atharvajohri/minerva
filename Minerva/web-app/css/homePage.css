@@ -30,7 +30,7 @@
 }
 
 
-body {font-family: 'Open Sans', sans-serif;;font-size:12px;padding:0;margin:0;}
+body {font-family: 'Open Sans', sans-serif;;font-size:12px;padding:0;margin:0;overflow-y: scroll; }
 #main-container {padding:10px;margin:auto;text-align: center; display:none; }
 #name-container {display:inline-block;font-weight:300;color:#999;padding-bottom:10px;cursor:pointer;}
 #header-container {}
@@ -39,7 +39,7 @@ body {font-family: 'Open Sans', sans-serif;;font-size:12px;padding:0;margin:0;}
 
 
 #interactive-info-container {margin:20px 10px;position:relative;}
-#interactive-face-container {border:2px solid #ccc;margin:auto;overflow:hidden;position:relative;/* background: url("/images/watcher/pics/filler.jpg"); */}
+#interactive-face-container {border:2px solid #ccc;margin:auto;overflow:hidden;position:relative; background: url("/images/watcher/pics/filler.jpg");}
 
 .interactive-option {position:absolute;font-weight:300;color:#555;cursor:pointer;background:rgba(255, 255, 255, 0.5);border-radius:3px;}
 .interactive-option:hover {font-weight:400}
