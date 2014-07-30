@@ -1,0 +1,78 @@
+@font-face {
+  font-family: 'Grand Hotel';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Grand Hotel'), local('GrandHotel-Regular'), url(http://themes.googleusercontent.com/static/fonts/grandhotel/v2/NrGQkrs9rbHm5EYx0Eil0obN6UDyHWBl620a-IRfuBk.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Open Sans Light'), local('OpenSans-Light'), url(http://themes.googleusercontent.com/static/fonts/opensans/v7/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'), url(http://themes.googleusercontent.com/static/fonts/opensans/v7/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Open Sans Semibold'), local('OpenSans-Semibold'), url(http://themes.googleusercontent.com/static/fonts/opensans/v7/MTP_ySUJH_bn48VBG8sNSnhCUOGz7vYGh680lGh-uXM.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: 300;
+  src: local('Open Sans Light Italic'), local('OpenSansLight-Italic'), url(http://themes.googleusercontent.com/static/fonts/opensans/v7/PRmiXeptR36kaC0GEAetxh_xHqYgAV9Bl_ZQbYUxnQU.woff) format('woff');
+}
+
+
+body {font-family: 'Open Sans', sans-serif;;font-size:12px;padding:0;margin:0;overflow-y: scroll; }
+#main-container {padding:10px;margin:auto;text-align: center; display:none; }
+#name-container {display:inline-block;font-weight:300;color:#999;padding-bottom:10px;cursor:pointer;}
+#header-container {}
+#footer-container {margin-top:15px;border-top:1px solid #aaa;opacity:0.6;color:#000;padding:15px;font-weight:400;font-size:15px;text-align: center;display:none;}
+#footer-container:hover {opacity:1.0}
+
+
+#interactive-info-container {margin:20px 10px;position:relative;}
+#interactive-face-container {border:2px solid #ccc;margin:auto;overflow:hidden;position:relative; background: url("/images/watcher/pics/filler.jpg");}
+
+.interactive-option {position:absolute;font-weight:300;color:#555;cursor:pointer;background:rgba(255, 255, 255, 0.5);border-radius:3px;}
+.interactive-option:hover {font-weight:400}
+
+#top-menu-container {text-align: center;display:none;overflow:hidden; }
+.top-menu-option {display:inline-block;padding:10px;background:#e4e4e4;font-size:20px;margin:0px 10px;border-radius:5px;}
+.top-menu-option:hover,.top-menu-option-selected {background:#d5d5d5;cursor:pointer;}
+
+#main-content-container {display:none}
+.content-container {display:none; text-align: left; padding:10px;}
+.bold {font-weight:400}
+.image-container img {width:100%}
+
+.cc-image-container {padding-right:20px; text-align: center;padding-top:20px}
+.cc-image-container img{max-height:70px;width: auto;opacity:0.7}
+
+.social-icon-container {width:200px;}
+.social-icon-container img {opacity:0.6;width:100%}
+.social-icon-container img:hover {opacity:0.8;cursor:pointer;}
+
+#contact-container {text-align:center;font-size:25px;color:#555; width:670px;margin:auto;}
+#contact-container table {border-spacing:15px; }
+
+#face {position: relative;z-index:20;}
+.eye {position:absolute;width:57px;height:45px;z-index:10}
+#eye-left { top:183px; left:118px;}
+#eye-right { top:183px; left:206px;}
+
+#faceimg {display:none}
+
+.cc-title {font-size:120%; font-weight:bold}
+.cc-content {color:#555;padding-left:10px; }
+.cc-content .cc-title {font-size:110%;padding-top:20px}
+/*geometry*/
+.visible-point {position:absolute;width:10px;height:10px;border-radius:10px;background:black;}
+

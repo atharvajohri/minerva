@@ -1,0 +1,39 @@
+<div id="feed-extraction-container">
+	<table id="fec-feed-sources-overtable">
+		<tr>
+			<td>
+				<div id="login-facebook-btn" class="simple-button">
+					Login with Facebook
+				</div>
+				<div id="new-feed-source-input-container">
+					<input type="text" data-bind="value: newSourceName" class="simple-input"/> 
+					<div class="simple-button" data-bind="click: addSource">Add</div>
+				</div>
+				<div id="feed-source-list-container">
+					<table data-bind="visible: sources().length > 0">
+						<thead>
+							<tr>
+								<th style="width:60%">Name</th><th style="width:25%">URL</th><th></th>
+							</tr>
+						</thead>
+						<tbody data-bind="foreach: sources">
+							<tr>
+								<td data-bind="text: name"></td>
+								<td data-bind="text: url"></td>
+								<td>
+									<a href='#' class="remove-source-link" data-bind="attr: {'data-rel': fuzzentity}, click: $parent.removeSource">Remove</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<span data-bind="visible: sources().length === 0">
+						<i>No Sources Added</i>
+					</span>
+				</div>
+			</td>
+			<td>
+			
+			</td>
+		</tr>
+	</table>
+</div>
