@@ -5,6 +5,7 @@ define(["knockout", "commonUtils"], function(ko, Utils){
 		
 		self.newSourceName = ko.observable();
 		self.sources = ko.observableArray();
+		self.homeStatus = ko.observable(new HomeStatus());
 		
 		self.removeSource = function(feedSource){
 			self.sources.remove(feedSource);
@@ -22,6 +23,11 @@ define(["knockout", "commonUtils"], function(ko, Utils){
 		}
 	}
 	
+	function HomeStatus(){
+		var self = this;
+		self.facebookConnected = ko.observable(false);
+	}
+	
 	function FeedSource(){
 		var self = this;
 		
@@ -30,6 +36,9 @@ define(["knockout", "commonUtils"], function(ko, Utils){
 		self.fuzzentity = ko.computed(function(){
 			return Utils.fuzzentityGenerator(self);
 		});
+		self.getFeed = function(){
+			Utils.FbUtils.getFeedFromPageSources([self.name()]);
+		}
 	}
 	
 	return {

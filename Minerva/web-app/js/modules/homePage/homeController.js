@@ -1,8 +1,7 @@
 define(["modules/homePage/homeAnimations", "modules/homePage/testAnimations"], function(_homeAnimations, _testAnimations){
 	
 	function init(){
-		_homeAnimations.init();
-		
+//		_homeAnimations.init();
 		setupEventHandlers();
 //		_testAnimations.init();
 	}

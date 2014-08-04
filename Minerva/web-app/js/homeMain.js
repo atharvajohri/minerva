@@ -5,16 +5,16 @@ requirejs.config({
 		'knockout' : 'frameworks/knockout',
 		'three' : 'frameworks/three.min',
 		'mousemeter' : 'frameworks/mousemeter.min',
-		'commonUtils' : 'modules/utilities/commonUtils',
-		'facebook': '//connect.facebook.net/en_US/all'
+//		'facebook': '//connect.facebook.net/en_US/all',
+		'commonUtils' : 'modules/utilities/commonUtils'
 	},
 	shim : {
 		'mousemeter': {
 			deps: ["jquery"]
-		},
+		}/*,
 	    'facebook' : {
 	      exports: 'FB'
-	    }
+	    }*/
 	}
 });
 

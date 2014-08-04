@@ -2,37 +2,60 @@
 	<table id="fec-feed-sources-overtable">
 		<tr>
 			<td>
-				<div id="login-facebook-btn" class="simple-button">
-					Login with Facebook
+				<div id="pre-fb-login-container" data-bind="visible: !homeStatus().facebookConnected()">
+					<div id="login-facebook-btn" class="simple-button">
+						Login with Facebook
+					</div>
 				</div>
-				<div id="new-feed-source-input-container">
-					<input type="text" data-bind="value: newSourceName" class="simple-input"/> 
-					<div class="simple-button" data-bind="click: addSource">Add</div>
-				</div>
-				<div id="feed-source-list-container">
-					<table data-bind="visible: sources().length > 0">
-						<thead>
-							<tr>
-								<th style="width:60%">Name</th><th style="width:25%">URL</th><th></th>
-							</tr>
-						</thead>
-						<tbody data-bind="foreach: sources">
-							<tr>
-								<td data-bind="text: name"></td>
-								<td data-bind="text: url"></td>
-								<td>
-									<a href='#' class="remove-source-link" data-bind="attr: {'data-rel': fuzzentity}, click: $parent.removeSource">Remove</a>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-					<span data-bind="visible: sources().length === 0">
-						<i>No Sources Added</i>
-					</span>
+				<div id="post-fb-login-container" data-bind="visible: homeStatus().facebookConnected">
+					<div class="simple-button" id="give-server-access-btn">Give Server Access</div>
+					<div id="new-feed-source-input-container">
+						<input type="text" data-bind="value: newSourceName" class="simple-input"/> 
+						<div class="simple-button" data-bind="click: addSource">Add</div>
+					</div>
+					<div id="feed-source-list-container">
+						<table data-bind="visible: sources().length > 0" id="feed-source-table">
+							<thead>
+								<tr>
+									<th>Name</th><th></th>
+								</tr>
+							</thead>
+							<tbody data-bind="foreach: sources">
+								<tr>
+									<td data-bind="text: name"></td>
+									<td>
+										<a href='#' class="remove-source-link" data-bind="attr: {'data-rel': fuzzentity}, click: $parent.removeSource">Remove</a>
+										<br>
+										<a href='#' class="view-source-link" data-bind="attr: {'data-rel': fuzzentity}, click: getFeed">View</a>
+									</td>
+								</tr>
+							</tbody>
+							<tfoot>
+								<tr>
+									<td colspan="10" align="center">
+										View All
+									</td>
+								</tr>
+							</tfoot>
+						</table>
+						<span data-bind="visible: sources().length === 0">
+							<i>No Sources Added</i>
+						</span>
+					</div>
 				</div>
 			</td>
 			<td>
-			
+				Extracted Feed:
+				<table>
+					<thead>
+						<tr>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+					
+					</tbody>
+				</table>
 			</td>
 		</tr>
 	</table>

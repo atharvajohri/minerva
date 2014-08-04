@@ -5,10 +5,12 @@
 		<meta name="description" content="This place is a thought shrub of Atharva Johri and is entirely maintained & developed by him." />
 		<link href='http://fonts.googleapis.com/css?family=Dosis|Grand+Hotel|Open+Sans:300italic,400,300,600' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" href="${resource(dir: 'css', file: 'homePage.css')}" type="text/css">
-		<script data-main="${resource(dir: 'js', file: 'homeMain.js')}" src="${resource(dir: 'js/frameworks', file: 'require.min.js')}"></script>
 		<fbg:resources locale="${Locale.getDefault()}" />
 	</head>
 	<body>
+		<div id="global-loader" class="importantHide">
+			<img src="/images/spinner.gif" />
+		</div>
 		<div id="main-container">
 			<div id="mc-title-container">
 				<div id="mctc-name-container" class="text-center">
@@ -48,5 +50,7 @@
 				<div class="simple-button" id="global-popup-close-btn">Close</div>
 			</div>
 		</div>
+		
+		<script data-main="${resource(dir: 'js', file: 'homeMain.js')}" src="${resource(dir: 'js/frameworks', file: 'require.min.js')}"></script>
 	</body>
 </html>

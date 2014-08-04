@@ -6,6 +6,55 @@ define(["jquery"], function($){
 	
 	var Utils = {};
 	
+	Utils.FbUtils = {};
+	
+	Utils.FbUtils.checkFacebookLoginStatus = function(response, connectedCallback){
+		console.log("FB RESPONSE -- ");
+		console.log(response);
+		if (response.status === 'connected') {// User logged into app and Facebook.
+			if (connectedCallback){
+				connectedCallback(response);
+			}
+	    } else {
+	    	FB.login(function(response) {
+	    		   // handle the response
+	    		Utils.FbUtils.checkFacebookLoginStatus(response, connectedCallback);
+	    	}, {scope: 'publish_stream, manage_pages'});
+	    }
+	};
+	
+	Utils.FbUtils.loginToFacebook = function(loggedInCallback){
+		FB.getLoginStatus(function(response) {
+			Utils.FbUtils.checkFacebookLoginStatus(response, loggedInCallback);
+		});
+	};
+	
+	Utils.FbUtils.getFeedFromPageSources = function(sourceList, currentIndex){
+		if (!currentIndex){
+			currentIndex = 0;
+		}
+		Utils.showLoader();
+		FB.api("/"+sourceList[currentIndex]+"/feed", function(response){
+			console.log("Feed for: " + sourceList[currentIndex]);
+			console.log(response);
+			
+			Utils.hideLoader();
+			currentIndex++;
+			
+			if (currentIndex < sourceList.length){
+				getFeedFromPageSources(sourceList, currentIndex);
+			}
+		});
+	};
+	
+	Utils.showLoader = function(){
+		$("#global-loader").removeClass("importantHide");
+	};
+	
+	Utils.hideLoader = function(){
+		$("#global-loader").addClass("importantHide");
+	};
+	
 	Utils.isFunction = function(value) {
 		if (value === undefined || value === null) {
 			return false;
@@ -36,8 +85,8 @@ define(["jquery"], function($){
 		Utils.getPopupContainer_element().addClass("importantHide");
 	};
 	
-	Utils.repositionGlobalPopup = function(customX, customY){
-		var globalPopup = Utils.getPopupContainer_element();
+	Utils.repositionGlobalPopup = function(customX, customY, customElement){
+		var globalPopup = customElement || Utils.getPopupContainer_element();
 		
 		var w_width = $(window).width();
 		var w_height = $(window).height();

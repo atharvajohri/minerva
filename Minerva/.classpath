@@ -13,7 +13,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="con" path="GROOVY_DSL_SUPPORT"/>
 	<classpathentry kind="lib" path="C:/Users/atharva.johri/Downloads/jsoup-1.7.2.jar"/>
-	<classpathentry kind="lib" path="lib/restfb-1.6.12.jar"/>
 	<classpathentry kind="con" path="GROOVY_SUPPORT"/>
 	<classpathentry excluding="BuildConfig.groovy|*DataSource.groovy|UrlMappings.groovy|Config.groovy|BootStrap.groovy|spring/resources.groovy" kind="src" path=".link_to_grails_plugins/atmosphere-0.4.2.3/grails-app/conf">
 		<attributes>
@@ -186,5 +185,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.grails.ide.eclipse.core.CLASSPATH_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/restfb-1.6.12.jar"/>
 	<classpathentry kind="output" path="target-eclipse/classes"/>
 </classpath>

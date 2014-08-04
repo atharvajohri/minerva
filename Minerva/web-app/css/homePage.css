@@ -15,6 +15,8 @@
 /* Container/element styles */
 body {background: url('/images/backgrounds/bg-repeat-1.png')}
 
+#global-loader {width: 100px; margin: auto auto; position:fixed; top:10px; padding:5px; text-align: center;z-index:10500}
+
 #main-container {width:1000px;padding:20px 10px;margin:auto auto;font-family: "Open Sans", sans-serif;}
 #mcc-quote-container {font-size:16px;text-align:center;margin-top:20px;background:rgba(50, 50, 50, 0.6);padding:15px;border-radius:15px;color:#fff}
 #mctc-name-container {text-transform: uppercase; font-size: 50px;color:#555}
@@ -31,3 +33,5 @@ body {background: url('/images/backgrounds/bg-repeat-1.png')}
 /* FEED EXTRACTOR STYLES */
 #feed-extraction-container {font-family: "Open Sans", sans-serif;}
 #feed-source-list-container {margin-top:10px;font-size:13px;width:300px;}
+#feed-source-list-container #feed-source-table tbody tr:nth-child(odd) {background:#ccc}
+#feed-source-list-container #feed-source-table tbody td {padding:5px;}
