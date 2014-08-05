@@ -7,12 +7,15 @@ import com.restfb.FacebookClient
 import com.restfb.Parameter
 import com.restfb.json.JsonArray
 import com.restfb.json.JsonObject
+import com.restfb.types.FacebookType
 
 class WorkbenchService {
 
 	/*Required Variables for Workbench Actions*/
 	private Boolean actionsAllowed = false
 	private String accessToken = ""
+	private FacebookClient facebookClient
+	private pageAccessToken
 	private def workbenchStatus = [
 		"currentlyParsing": false	
 	]
@@ -68,7 +71,7 @@ class WorkbenchService {
 			
 			actionsAllowed = false
 			postsCount = postsCount ?: 1
-			FacebookClient facebookClient = new DefaultFacebookClient(accessToken)
+			facebookClient = new DefaultFacebookClient(accessToken)
 			//get last 3 posts
 			JsonObject pageFeed = facebookClient.fetchObject("${pageData.dataPath}", JsonObject.class,
 				Parameter.with("limit", postsCount)
@@ -94,9 +97,45 @@ class WorkbenchService {
 		if (isPostAlreadyCommentedOn(parsedPostJson, pageData)){
 			log.error "Post is already commented on!"
 		}else{
-			log.info "Post is not commented on.. Trying to comment now"
+			log.info "Post is not commented on.. Trying to comment now."
+			pageAccessToken = getPageAccessToken(grailsApplication.config.facebook.actingFacebookPageId)
+			
+			if (pageAccessToken){
+				log.info "Retrieved acting page access token."
+				
+				def postFacebookId = parsedPostJson.getString("id");
+				
+				facebookClient = new DefaultFacebookClient(pageAccessToken)
+				FacebookType publishMessageResponse = facebookClient.publish("${postFacebookId}/comments", FacebookType.class,
+				  Parameter.with("message", "RestFB test")
+				);
+				
+			}else{
+				log.error "Cannot post comment.. Could not retrieve correct acting page access token."
+			}
 			PageData page = getObjectDataByFacebookId(pageName, "PageData", true)
 		}
+	}
+	
+	def getPageAccessToken(pageId){
+		
+		JsonObject accountsResponse = facebookClient.fetchObject("me/accounts?scope='manage_pages, publish_stream, publish_actions'", JsonObject.class/*,
+			Parameter.with("scope", "manage_pages, publish_stream, publish_actions")*/
+		)
+		JsonArray accountsArray = accountsResponse.map.data
+		
+		def pageAccessToken = ''
+		if (accountsArray.length() > 0){
+			for (int i=0; i<accountsArray.length(); i++){
+				JsonObject parsedAccountJson = accountsArray.getJsonObject(i)
+				if (parsedAccountJson.getString("id").equals(pageId.toString())){
+					pageAccessToken = parsedAccountJson.getString("access_token")
+					break
+				}
+			}
+		}
+		
+		return pageAccessToken
 	}
 	
 	def isPostAlreadyCommentedOn(JsonObject parsedPostJson, pageData){

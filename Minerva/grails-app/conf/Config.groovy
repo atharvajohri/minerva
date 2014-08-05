@@ -93,10 +93,16 @@ log4j = {
 
 facebook.applicationSecret='eb6c18ec3dcd3b02dfeaba13e1eb79f9'
 facebook.applicationId='672467819494839'
-
+facebook.actingFacebookPageId = '1445630119047447'
 facebook.pageDataToParse = [
-	"9gag": [
+	/*"9gag": [
 		"dataPath": "109041001839/photos",
 		"dataType": "Photo"
+	]*/
+	"the.top.commentator": [
+		"dataPath": "1447046882239104/photos",
+		"dataType": "Photo"
 	]
+	
 ]
+
