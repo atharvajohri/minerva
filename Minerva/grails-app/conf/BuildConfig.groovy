@@ -61,6 +61,7 @@ grails.project.dependency.resolution = {
 
 //        runtime ":database-migration:1.3.2"
 
+		compile ":quartz:1.0.2"
         compile ':cache:1.0.1'
     }
 }

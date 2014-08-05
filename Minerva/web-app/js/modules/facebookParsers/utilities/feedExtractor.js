@@ -29,7 +29,7 @@ define(["commonUtils", "modules/facebookParsers/utilities/feedExtractorModels", 
 		$("#give-server-access-btn").on("click", function(){
 			if (g_accessToken){
 				$.ajax({
-					url: "/Workbench/setAccessToken?access_token="+g_accessToken,
+					url: "/Workbench/allowServerAccess?access_token="+g_accessToken,
 					complete: function(response){
 						console.log(response);
 					}
