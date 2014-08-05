@@ -36,6 +36,18 @@ define(["commonUtils", "modules/facebookParsers/utilities/feedExtractorModels", 
 				});				
 			}
 		});
+		
+		$("#kill-server-access-btn").off("click");
+		$("#kill-server-access-btn").on("click", function(){
+			if (g_accessToken){
+				$.ajax({
+					url: "/Workbench/killServerAccess",
+					complete: function(response){
+						console.log(response);
+					}
+				});				
+			}
+		});
 	}
 	
 	function setupExtractionSources(existingFeedSourcesModel){

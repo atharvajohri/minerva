@@ -8,7 +8,7 @@ define(["jquery"], function($){
 	
 	Utils.FbUtils = {};
 	
-	Utils.FbUtils.checkFacebookLoginStatus = function(response, connectedCallback){
+	Utils.FbUtils.checkFacebookLoginStatus = function(response, connectedCallback, customScope){
 		console.log("FB RESPONSE -- ");
 		console.log(response);
 		if (response.status === 'connected') {// User logged into app and Facebook.
@@ -19,14 +19,15 @@ define(["jquery"], function($){
 	    	FB.login(function(response) {
 	    		   // handle the response
 	    		Utils.FbUtils.checkFacebookLoginStatus(response, connectedCallback);
-	    	}, {scope: 'publish_stream, manage_pages'});
+	    	}, {scope: (customScope || 'manage_pages, publish_actions') } );
 	    }
 	};
 	
-	Utils.FbUtils.loginToFacebook = function(loggedInCallback){
-		FB.getLoginStatus(function(response) {
-			Utils.FbUtils.checkFacebookLoginStatus(response, loggedInCallback);
-		});
+	Utils.FbUtils.loginToFacebook = function(connectedCallback, customScope){
+		FB.login(function(response) {
+	 		   // handle the response
+	 		Utils.FbUtils.checkFacebookLoginStatus(response, connectedCallback);
+	 	}, {scope: (customScope || 'manage_pages, publish_actions') } );
 	};
 	
 	Utils.FbUtils.getFeedFromPageSources = function(sourceList, currentIndex){

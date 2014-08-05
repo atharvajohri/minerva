@@ -1,5 +1,6 @@
 package com.minerva
 
+import com.minerva.workbench.CommentData
 import com.minerva.workbench.PageData
 import com.minerva.workbench.PostData
 import com.restfb.DefaultFacebookClient
@@ -101,26 +102,50 @@ class WorkbenchService {
 			pageAccessToken = getPageAccessToken(grailsApplication.config.facebook.actingFacebookPageId)
 			
 			if (pageAccessToken){
-				log.info "Retrieved acting page access token."
-				
+				log.info "Retrieved acting page access token.. ${pageAccessToken}"
 				def postFacebookId = parsedPostJson.getString("id");
 				
 				facebookClient = new DefaultFacebookClient(pageAccessToken)
+				def commentData = getCommentData()
 				FacebookType publishMessageResponse = facebookClient.publish("${postFacebookId}/comments", FacebookType.class,
-				  Parameter.with("message", "RestFB test")
+				  Parameter.with("message", commentText)
 				);
+			
+				log.info "Successfully posted comment $commentText!"
+			
+				PageData page = getObjectDataByFacebookId(pageName, "PageData", true)
+				
+				PostData post = new PostData()
+				post.facebookId = postFacebookId.toString()
+				if (post.save()){
+					CommentData comment = new CommentData()
+					comment.facebookId = publishMessageResponse.getId().toString()
+					if (comment.save()){
+						post.addToComments comment
+					}else{
+						showPersistenceErrors(post, "Could not save comment to db!")
+					}
+				}else{
+					showPersistenceErrors(post, "Could not save post to db!")
+				}
+				
 				
 			}else{
 				log.error "Cannot post comment.. Could not retrieve correct acting page access token."
 			}
-			PageData page = getObjectDataByFacebookId(pageName, "PageData", true)
+			
 		}
 	}
 	
-	def getPageAccessToken(pageId){
+	def getCommentData(){
 		
-		JsonObject accountsResponse = facebookClient.fetchObject("me/accounts?scope='manage_pages, publish_stream, publish_actions'", JsonObject.class/*,
-			Parameter.with("scope", "manage_pages, publish_stream, publish_actions")*/
+	}
+	
+	def getPageAccessToken(pageId){
+		log.info "ACCESS TOKEN AHEAD \n $accessToken"
+		facebookClient = new DefaultFacebookClient(accessToken)
+		JsonObject accountsResponse = facebookClient.fetchObject("me/accounts", JsonObject.class,
+			Parameter.with("scope", "manage_pages, publish_actions")
 		)
 		JsonArray accountsArray = accountsResponse.map.data
 		
@@ -160,11 +185,15 @@ class WorkbenchService {
 			if (dataObject.save()){
 				log.info "Successfully created a new ${dataType} ${facebookId}"	
 			}else{
-				log.error "Could not create ${dataType} ${facebookId}:"
-				dataObject.errors.each{
-					println it
-				}
+				showPersistenceErrors(dataObject, "Could not create ${dataType} ${facebookId}:")
 			}
+		}
+	}
+	
+	def showPersistenceErrors(object, errorMessage){
+		log.error errorMessage ?: "Error while saving"
+		object.errors.each{
+			println it
 		}
 	}
 			
