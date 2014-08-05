@@ -3,6 +3,7 @@ package com.minerva
 import com.minerva.workbench.CommentData
 import com.minerva.workbench.PageData
 import com.minerva.workbench.PostData
+import com.restfb.BinaryAttachment
 import com.restfb.DefaultFacebookClient
 import com.restfb.FacebookClient
 import com.restfb.Parameter
@@ -24,7 +25,7 @@ class WorkbenchService {
 
 	/*Injected services*/	
 	def grailsApplication
-	
+	def fileService
 	
 	def updateWorkbenchVariables(c_accessToken, c_actionsAllowed){
 		actionsAllowed = c_actionsAllowed
@@ -35,14 +36,22 @@ class WorkbenchService {
 	/*Following method triggered with General Actions Job -- [WorkbenchJob.execute] */
 	def triggerWorkbenchJobActions(){
 		def logString = "**JOB**: Triggered Workbench Job"
-		if(actionsAllowed == true){
-			logString += "\nAccess Allowed! Beginning parse for facebook pages.."
-			log.info logString
-			//TODO: can add more actions to run below!
-			//TODO: shift all possible actions to config 
-			parseFacebookPages();
+		if(actionsAllowed == true && workbenchStatus["currentlyParsing"] == false){
+			
+			try {
+				logString += "\nAccess Allowed! Beginning parse for facebook pages.."
+				log.info logString
+				//TODO: can add more actions to run below!
+				//TODO: shift all possible actions to config
+				workbenchStatus["currentlyParsing"] = true
+				parseFacebookPages();
+			}catch(Exception e){
+				log.info e
+			}finally{
+				workbenchStatus["currentlyParsing"] = false
+			}
 		}else{
-			logString += "\nAccess disallowed"
+			logString += "\nCannot proceed:\nActions Allowed: ${actionsAllowed}\nCurrently Parsing: ${workbenchStatus['currentlyParsing']}"
 			log.info logString
 		}
 	}
@@ -54,7 +63,7 @@ class WorkbenchService {
 			if (parsedPosts.length() > 0){
 				log.info "Extracted ${parsedPosts.length()} post/s for $pageName\nCommencing commentary for them."
 				for (int i=0; i<parsedPosts.length(); i++){
-					JsonObject parsedPostJson = parsedPosts.getJsonObject(i) 
+					def parsedPostJson = parsedPosts.getJsonObject(i) 
 					commentOnPost(parsedPostJson, pageName, pageData)
 				}
 			}else{
@@ -70,7 +79,7 @@ class WorkbenchService {
 		if (accessToken && accessToken.size() > 0){
 			log.info "Extracting $postsCount post for $pageName"
 			
-			actionsAllowed = false
+//			actionsAllowed = false
 			postsCount = postsCount ?: 1
 			facebookClient = new DefaultFacebookClient(accessToken)
 			//get last 3 posts
@@ -90,9 +99,9 @@ class WorkbenchService {
 		return retrievedPosts
 	}
 	
-	def commentOnPost(JsonObject parsedPostJson, pageName, pageData){
+	def commentOnPost(parsedPostJson, pageName, pageData){
 		log.info "\n\n --- PROPERTIES OF POST --- \n"
-		println "${parsedPostJson.getString("name")}\n${parsedPostJson.getString("created_time")}"
+		println "${parsedPostJson.getString('created_time')}\n${parsedPostJson.getString('id')}"
 		
 		
 		if (isPostAlreadyCommentedOn(parsedPostJson, pageData)){
@@ -107,28 +116,36 @@ class WorkbenchService {
 				
 				facebookClient = new DefaultFacebookClient(pageAccessToken)
 				def commentData = getCommentData()
-				FacebookType publishMessageResponse = facebookClient.publish("${postFacebookId}/comments", FacebookType.class,
-				  Parameter.with("message", commentText)
-				);
-			
-				log.info "Successfully posted comment $commentText!"
-			
-				PageData page = getObjectDataByFacebookId(pageName, "PageData", true)
 				
-				PostData post = new PostData()
-				post.facebookId = postFacebookId.toString()
-				if (post.save()){
-					CommentData comment = new CommentData()
-					comment.facebookId = publishMessageResponse.getId().toString()
-					if (comment.save()){
-						post.addToComments comment
+				if (commentData.imageFileName){
+					InputStream is = new FileInputStream(fileService.getPathToPictureComments() + File.separator + commentData.imageFileName)
+					
+					FacebookType publishMessageResponse = facebookClient.publish("${postFacebookId}/comments", FacebookType.class,
+						BinaryAttachment.with('source', is)
+					);
+				
+					log.info "<<<<<<<<<<<<<<< Successfully posted comment ${commentData.commentText}!"
+
+//					is.close()
+					PageData page = getObjectDataByFacebookId(pageName, "PageData", true)
+					
+					PostData post = new PostData()
+					post.facebookId = postFacebookId.toString()
+					if (post.save(flush: true)){
+						CommentData comment = new CommentData()
+						comment.facebookId = publishMessageResponse.getId().toString()
+						comment.commentPicture = commentData.commentPicture
+						if (comment.save(flush: true)){
+							post.addToComments comment
+						}else{
+							showPersistenceErrors(post, "Could not save comment to db!")
+						}
 					}else{
-						showPersistenceErrors(post, "Could not save comment to db!")
+						showPersistenceErrors(post, "Could not save post to db!")
 					}
 				}else{
-					showPersistenceErrors(post, "Could not save post to db!")
+					log.error "Cannot post comment.. All images have been used."
 				}
-				
 				
 			}else{
 				log.error "Cannot post comment.. Could not retrieve correct acting page access token."
@@ -139,6 +156,23 @@ class WorkbenchService {
 	
 	def getCommentData(){
 		
+		def commentData = [:]
+		def pictureFileName = getPictureFileName()
+		if( pictureFileName ){
+			commentData.commentText = "xD"
+			commentData.imageFileName = pictureFileName
+		}
+		
+		return commentData
+	}
+	
+	def getPictureFileName(){ 
+		//iterate through all comments and see which pictures have been used
+		//get all possible picture images
+		def allImages = fileService.getAllPictureCommentImages()
+		def usedImages = CommentData.list(max: 100).commentPicture
+		def possibleImages = (allImages - usedImages)
+		return possibleImages.size() > 0 ? possibleImages[0] : null
 	}
 	
 	def getPageAccessToken(pageId){
@@ -163,12 +197,12 @@ class WorkbenchService {
 		return pageAccessToken
 	}
 	
-	def isPostAlreadyCommentedOn(JsonObject parsedPostJson, pageData){
-		def postFacebookId = parsedPostJson.getJsonObject("from").getString("id")
-		PostData savedPostObject = PostData.findAllByFacebookId(postFacebookId)
+	def isPostAlreadyCommentedOn(parsedPostJson, pageData){
+		def postFacebookId = parsedPostJson.getString("id")
+		PostData savedPostObject = PostData.findByFacebookId(postFacebookId)
 		
-		Boolean isAlreadyCommentedOn = false
-		if (savedPostObject && savedPostObject.comments && savedPostObject.comments.size() > 0){
+		def isAlreadyCommentedOn = false
+		if (savedPostObject){
 			isAlreadyCommentedOn = true
 		}
 		
@@ -182,7 +216,7 @@ class WorkbenchService {
 			log.info "${dataType} ${facebookId} does not exist in database.. trying to create it now."
 			dataObject = clazz.newInstance()
 			dataObject.facebookId = facebookId
-			if (dataObject.save()){
+			if (dataObject.save(flush: true)){
 				log.info "Successfully created a new ${dataType} ${facebookId}"	
 			}else{
 				showPersistenceErrors(dataObject, "Could not create ${dataType} ${facebookId}:")

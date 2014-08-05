@@ -75,6 +75,7 @@ log4j = {
     //
     appenders {
         console name:'stdout', layout:pattern(conversionPattern: '\n\n LOG:: %d{HH:mm:ss,SSS} \n%c{2} %m')
+		console name:'stderr', layout:pattern(conversionPattern: '\n\n ERROR:: %d{HH:mm:ss,SSS} \n%c{2} %m')
     }
 	info   'grails.app'
     error  'org.codehaus.groovy.grails.web.servlet',        // controllers
@@ -94,15 +95,22 @@ log4j = {
 facebook.applicationSecret='eb6c18ec3dcd3b02dfeaba13e1eb79f9'
 facebook.applicationId='672467819494839'
 facebook.actingFacebookPageId = '1445630119047447'
+facebook.pictureCommentsFolder=  "images/pictureComments"
 facebook.pageDataToParse = [
 	/*"9gag": [
 		"dataPath": "109041001839/photos",
 		"dataType": "Photo"
 	]*/
-	"the.top.commentator": [
-		"dataPath": "1447046882239104/photos",
+	
+	"thebestpagever": [
+		"dataPath": "232832251054/photos",
 		"dataType": "Photo"
 	]
+	
+	/*"the.top.commentator": [
+		"dataPath": "1447046882239104/photos",
+		"dataType": "Photo"
+	]*/
 	
 ]
 

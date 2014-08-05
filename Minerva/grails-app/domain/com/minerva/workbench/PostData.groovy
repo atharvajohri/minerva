@@ -10,4 +10,8 @@ class PostData {
     static constraints = {
 		facebookId unique: true
     }
+	
+	static mapping = {
+		comments lazy: false
+	}
 }
