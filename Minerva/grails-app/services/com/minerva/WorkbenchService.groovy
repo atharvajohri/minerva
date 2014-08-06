@@ -46,7 +46,9 @@ class WorkbenchService {
 				workbenchStatus["currentlyParsing"] = true
 				parseFacebookPages();
 			}catch(Exception e){
-				log.info e
+				def exceptionString = e.toString()
+				log.error exceptionString
+				
 			}finally{
 				workbenchStatus["currentlyParsing"] = false
 			}
@@ -115,18 +117,27 @@ class WorkbenchService {
 				def postFacebookId = parsedPostJson.getString("id");
 				
 				facebookClient = new DefaultFacebookClient(pageAccessToken)
-				def commentData = getCommentData()
+				def commentData = getCommentData(parsedPostJson, pageName, pageData)
 				
-				if (commentData.imageFileName){
-					InputStream is = new FileInputStream(fileService.getPathToPictureComments() + File.separator + commentData.imageFileName)
+				if (commentData.imageFileName || commentData.attachment_url){
+					FacebookType publishMessageResponse
+					if (pageData.commentType == "text"){
+						publishMessageResponse = facebookClient.publish("${postFacebookId}/comments", FacebookType.class,
+							Parameter.with('message', commentData.attachment_url)
+						)
+					}else{
+						InputStream is = new FileInputStream(fileService.getPathToPictureComments() + File.separator + commentData.imageFileName)
+						
+						publishMessageResponse = facebookClient.publish("${postFacebookId}/comments", FacebookType.class,
+							BinaryAttachment.with('source', is)
+						)
 					
-					FacebookType publishMessageResponse = facebookClient.publish("${postFacebookId}/comments", FacebookType.class,
-						BinaryAttachment.with('source', is)
-					);
+						is.close()
+					}
+					
 				
-					log.info "<<<<<<<<<<<<<<< Successfully posted comment ${commentData.commentText}!"
+					log.info "<<<<<<<<<<<<<<< Successfully posted comment!"
 
-//					is.close()
 					PageData page = getObjectDataByFacebookId(pageName, "PageData", true)
 					
 					PostData post = new PostData()
@@ -154,16 +165,36 @@ class WorkbenchService {
 		}
 	}
 	
-	def getCommentData(){
+	def getCommentData(parsedPostJson, pageName, pageData){
 		
 		def commentData = [:]
+		
 		def pictureFileName = getPictureFileName()
+		commentData.commentPicture = pictureFileName
 		if( pictureFileName ){
-			commentData.commentText = "xD"
-			commentData.imageFileName = pictureFileName
+			if (pageData.commentType == "text"){
+				commentData.attachment_url = getFacebookPictureURLFromFileName(pictureFileName)
+			}else{
+				commentData.imageFileName = pictureFileName
+			}
 		}
 		
 		return commentData
+	}
+	
+	def getFacebookPictureURLFromFileName(String pictureFileName){
+		//pic file name is something like 1017562_4637469111447_6783571092768124838_n.jpg and 4637469111447 is the fb id
+		
+		
+		def facebookPictureId = pictureFileName.substring(pictureFileName.indexOf("_")+1, pictureFileName.size())
+		facebookPictureId = facebookPictureId.substring(0, facebookPictureId.indexOf("_"))
+		
+		def pictureURL = "https://www.facebook.com/photo.php?fbid="+facebookPictureId
+		
+//		pictureURL = URLEncoder.encode(pictureURL, "UTF-8")
+		
+		log.info "extracted fb pic url $pictureURL"
+		return pictureURL
 	}
 	
 	def getPictureFileName(){ 

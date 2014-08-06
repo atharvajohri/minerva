@@ -99,17 +99,20 @@ facebook.pictureCommentsFolder=  "images/pictureComments"
 facebook.pageDataToParse = [
 	/*"9gag": [
 		"dataPath": "109041001839/photos",
-		"dataType": "Photo"
+		"dataType": "Photo",
+		"commentType": "text"
 	]*/
 	
 	"thebestpagever": [
 		"dataPath": "232832251054/photos",
-		"dataType": "Photo"
+		"dataType": "Photo",
+		"commentType": "text"
 	]
 	
 	/*"the.top.commentator": [
 		"dataPath": "1447046882239104/photos",
-		"dataType": "Photo"
+		"dataType": "Photo",
+		"commentType": "photo"
 	]*/
 	
 ]
