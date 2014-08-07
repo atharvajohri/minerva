@@ -7,7 +7,7 @@ class WorkbenchJob {
 	def workbenchService
 	
     static triggers = {
-      simple repeatInterval: 10000l // execute job once in 5 seconds
+      simple repeatInterval: 30000l 
     }
 
     def execute() {

@@ -92,22 +92,23 @@ log4j = {
 }
 
 
-facebook.applicationSecret='eb6c18ec3dcd3b02dfeaba13e1eb79f9'
-facebook.applicationId='672467819494839'
+facebook.applicationSecret = 'eb6c18ec3dcd3b02dfeaba13e1eb79f9'
+facebook.applicationId = '672467819494839'
 facebook.actingFacebookPageId = '1445630119047447'
-facebook.pictureCommentsFolder=  "images/pictureComments"
+facebook.pictureCommentsFolder = 'images/pictureComments'
+facebook.controllerPostId = '601167826_10152170472642827' 
 facebook.pageDataToParse = [
-	/*"9gag": [
-		"dataPath": "109041001839/photos",
+	"9gag": [
+		"dataPaths": ["109041001839/photos"],
 		"dataType": "Photo",
 		"commentType": "text"
-	]*/
-	
+	],	
 	"thebestpagever": [
-		"dataPath": "232832251054/photos",
+		"dataPaths": ["232832251054/photos", "10150958724421055/photos"],
 		"dataType": "Photo",
-		"commentType": "text"
+		"commentType": "photo"
 	]
+
 	
 	/*"the.top.commentator": [
 		"dataPath": "1447046882239104/photos",

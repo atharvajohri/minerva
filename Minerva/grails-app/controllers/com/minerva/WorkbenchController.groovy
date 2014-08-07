@@ -7,12 +7,17 @@ class WorkbenchController {
 	
     def allowServerAccess() { 
 		workbenchService.updateWorkbenchVariables(params.access_token, true)
-		return "thanks"
+		render "thanks"
 	}
 	
 	def blockServerAccess(){
 		workbenchService.updateWorkbenchVariables("", false)
-		return "wtf dude"
+		render "wtf dude"
+	}
+	
+	def updateAccessFromControllerPost(){
+		workbenchService.checkControllerPostAction()
+		render "checked"
 	}
 	
 }

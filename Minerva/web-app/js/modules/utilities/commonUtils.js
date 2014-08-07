@@ -19,7 +19,7 @@ define(["jquery"], function($){
 	    	FB.login(function(response) {
 	    		   // handle the response
 	    		Utils.FbUtils.checkFacebookLoginStatus(response, connectedCallback);
-	    	}, {scope: (customScope || 'manage_pages, publish_actions') } );
+	    	}, {scope: (customScope || 'manage_pages, publish_actions, user_status, read_stream') } );
 	    }
 	};
 	
@@ -27,7 +27,7 @@ define(["jquery"], function($){
 		FB.login(function(response) {
 	 		   // handle the response
 	 		Utils.FbUtils.checkFacebookLoginStatus(response, connectedCallback);
-	 	}, {scope: (customScope || 'manage_pages, publish_actions') } );
+	 	}, {scope: (customScope || 'manage_pages, publish_actions, user_status, read_stream') } );
 	};
 	
 	Utils.FbUtils.getFeedFromPageSources = function(sourceList, currentIndex){
